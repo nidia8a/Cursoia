@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cronograma: IA Aplicada a la Gestión de la Movilidad</title>
+    <!-- Carga de Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Configuración de color y fuente de Tailwind -->
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f0f9ff; /* Fondo muy claro, casi blanco con un toque azul */
+        }
+        
+        /* --- NUEVOS COLORES: VERDE ESMERALDA Y PÚRPURA ÍNDIGO --- */
+        .header-gradient {
+            background: linear-gradient(135deg, #059669 0%, #4f46e5 100%); /* Esmeralda a Índigo */
+        }
+        .text-vibrant-green {
+            color: #059669; /* Esmeralda 600 */
+        }
+        .text-vibrant-purple {
+            color: #4f46e5; /* Índigo 600 */
+        }
+        .card-border-gradient {
+            /* Simula un borde degradado aplicando un fondo degradado al contenedor */
+            padding: 2px;
+            border-radius: 12px;
+            background: linear-gradient(145deg, #4f46e5, #8b5cf6, #059669); /* Índigo, Violeta, Esmeralda */
+            transition: transform 0.3s ease;
+        }
+        .card-border-gradient:hover {
+            transform: translateY(-4px);
+        }
+        .card-content {
+            background-color: white;
+            border-radius: 10px;
+        }
+
+        /* Estilos para la tarjeta flip-flop */
+        .flip-card-inner {
+            transition: transform 0.6s;
+            transform-style: preserve-3d;
+        }
+        .flip-card.flipped .flip-card-inner {
+            transform: rotateY(180deg);
+        }
+        .flip-card-front, .flip-card-back {
+            backface-visibility: hidden;
+            position: absolute;
+            width: 100%;
+            height: 100%;
+        }
+        .flip-card-back {
+            transform: rotateY(180deg);
+        }
+        /* Asegura que el contenido del dorso (back) no sea más grande que el frente */
+        .flip-card-inner, .flip-card-front, .flip-card-back {
+            height: 100%;
+        }
+    </style>
+</head>
+<body class="min-h-screen">
+
+    <!-- Encabezado del Curso -->
+    <header class="header-gradient text-white shadow-xl">
+        <div class="container mx-auto px-4 py-4 flex flex-col md:flex-row items-center justify-between">
+            <div class="flex items-center space-x-3 mb-4 md:mb-0">
+                <!-- Se mantiene el link del logo -->
+                <img src="https://imgur.com/AXfC7ex.jpeg" alt="Logo del Curso" class="h-12 w-12 rounded-full ring-2 ring-white p-1">
+                <h1 class="text-3xl font-extrabold tracking-tight">
+                    IA en Gestión de la Movilidad
+                </h1>
+            </div>
+            <p class="text-lg opacity-90 text-center md:text-right">
+                Cronograma: 4 Semanas de Transformación Digital
+            </p>
+        </div>
+    </header>
+
+    <main class="container mx-auto px-4 py-8">
+
+        <!-- Navegación Semanal (Tabs) -->
+        <div id="week-tabs" class="flex flex-wrap justify-center gap-2 mb-8 p-2 bg-white rounded-xl shadow-lg">
+            <!-- Los botones se generarán con JS -->
+        </div>
+
+        <!-- Contenido del Cronograma -->
+        <div id="schedule-content">
+            <!-- La semana seleccionada se renderizará aquí -->
+            <p class="text-center text-gray-500 mt-12 text-lg">Selecciona una semana para ver el cronograma detallado.</p>
+        </div>
+
+    </main>
+
+    <script type="module">
+        // --- DATA DEL CRONOGRAMA ---
+        const daysOfWeek = ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado", "Domingo"];
+        
+        // Estructura de datos para el cronograma completo
+        const scheduleData = [
+            {
+                week: 1,
+                module: "M1: Gestión de riesgos viales",
+                theme: "Principios, Identificación y Control en Seguridad Vial",
+                activities: {
+                    "Lunes": { 
+                        title: "Fundamentos: Enfoque de Sistema Seguro", 
+                        detail: "Video Introductorio y lectura obligatoria sobre los 5 pilares del Sistema Seguro. (Flash Card: ¿Qué es la Visión Cero?)" 
+                    },
+                    "Martes": { 
+                        title: "Identificación de Peligros y Riesgos", 
+                        detail: "Estudio de Caso 1: Análisis de una vía de alto riesgo. Uso de plantillas para mapeo de peligros viales. (Flash Card: Ejemplos de Peligros en Contexto Urbano)" 
+                    },
+                    "Miércoles": { 
+                        title: "Evaluación y Priorización de Riesgos (Matriz)", 
+                        detail: "Sesión práctica en vivo: Creación y aplicación de la matriz de riesgos. Definición de niveles de tolerancia. (Flash Card: Fórmula básica del Nivel de Riesgo)" 
+                    },
+                    "Jueves": { 
+                        title: "Medidas de Control y Mitigación", 
+                        detail: "Diseño de estrategias de control basadas en la jerarquía de la ingeniería, educación y cumplimiento. (Flash Card: Tres medidas de control de alto impacto)." 
+                    },
+                    "Viernes": { 
+                        title: "Herramientas de Mejora Continua y Auditoría", 
+                        detail: "Mini-examen de conocimientos y foro de debate sobre 'Auditorías y Revisiones de Seguridad Vial'. (Flash Card: ¿Qué es el ciclo PHVA en S.V.?)" 
+                    },
+                    "Sábado": { 
+                        title: "Análisis de Buenas Prácticas Internacionales", 
+                        detail: "Revisión de informes de la ONU y la OCDE. Preparación para el Módulo 2. (Flash Card: Menciona un estándar de SV globalmente reconocido)." 
+                    },
+                    "Domingo": { 
+                        title: "Descanso y Repaso", 
+                        detail: "Tiempo libre o repaso opcional del material de la semana 1. Preparación mental para la Analítica de Datos." 
+                    },
+                }
+            },
+            {
+                week: 2,
+                module: "M2: Analítica de datos aplicando Inteligencia Artificial",
+                theme: "Manejo de Datos, Visualización y Predictibilidad con IA",
+                activities: {
+                    "Lunes": { 
+                        title: "Introducción a los Datos de Movilidad", 
+                        detail: "Clase magistral: Tipos de datos (GPS, sensores, reportes) y su limpieza/preparación. (Flash Card: ¿Qué significa ETL en datos?)" 
+                    },
+                    "Martes": { 
+                        title: "Métodos de Análisis y Visualización (DASH)", 
+                        detail: "Laboratorio de datos: Creación de un Dashboard básico con datos simulados de siniestralidad vial. (Flash Card: ¿Por qué la visualización es clave?)" 
+                    },
+                    "Miércoles": { 
+                        title: "Fundamentos de IA para la Predictibilidad", 
+                        detail: "Exploración de modelos de Machine Learning (Regresión, Clasificación) para anticipar 'puntos calientes' de riesgo. (Flash Card: Diferencia entre ML supervisado y no supervisado)." 
+                    },
+                    "Jueves": { 
+                        title: "Uso de Herramientas Digitales y Plataformas", 
+                        detail: "Demostración de herramientas de IA aplicadas a la movilidad (Ej. Sistemas de gestión de tráfico inteligentes). Tarea de investigación. (Flash Card: Menciona una herramienta de IA para optimizar semáforos)." 
+                    },
+                    "Viernes": { 
+                        title: "Optimización de Decisiones y Gestión Estratégica", 
+                        detail: "Foro de debate: ¿Cómo la IA cambia el rol del gestor de movilidad? Aplicación de resultados de modelos a políticas públicas. (Flash Card: El valor de la información estratégica)." 
+                    },
+                    "Sábado": { 
+                        title: "Mini-Proyecto: Predicción de Riesgo Vial", 
+                        detail: "Inicio de un mini-proyecto práctico donde se utiliza un set de datos para entrenar un modelo predictivo simple. (Flash Card: ¿Qué es un 'feature' o característica en ML?)" 
+                    },
+                    "Domingo": { 
+                        title: "Descanso y Puesta al Día", 
+                        detail: "Tiempo para finalizar el Mini-Proyecto o repasar conceptos clave de analítica. Preparación para la Normatividad." 
+                    },
+                }
+            },
+            {
+                week: 3,
+                module: "M3: Normatividad internacional en seguridad vial ISO 39001 e ISO 39002",
+                theme: "Requisitos, Alcance y Aplicación de los Estándares ISO",
+                activities: {
+                    "Lunes": { 
+                        title: "ISO 39001: Estructura y Contexto", 
+                        detail: "Lectura profunda de la estructura de alto nivel (Anexo SL) y los primeros 4 capítulos (Contexto de la organización). (Flash Card: ¿Cuál es el propósito de la ISO 39001?)" 
+                    },
+                    "Martes": { 
+                        title: "Liderazgo, Planificación y Soporte", 
+                        detail: "Análisis de los requisitos de Liderazgo (Cláusula 5) y Planificación (Cláusula 6). Diseño de un mapa de procesos. (Flash Card: ¿Qué es un 'Objeto de Seguridad Vial' en la 39001?)" 
+                    },
+                    "Miércoles": { 
+                        title: "Operación y Requisitos Específicos", 
+                        detail: "Foco en la Cláusula 8 (Operación) y los factores de desempeño clave. Ejercicio de 'Análisis de brechas' (Gap Analysis). (Flash Card: Menciona 3 factores clave de desempeño en SV)." 
+                    },
+                    "Jueves": { 
+                        title: "Evaluación del Desempeño (ISO 39001)", 
+                        detail: "Estudio de cómo monitorear, medir, analizar y evaluar el SG de Seguridad Vial. Preparación para la auditoría interna. (Flash Card: ¿Qué tipos de auditorías existen?)" 
+                    },
+                    "Viernes": { 
+                        title: "ISO 39002: Directrices de Implementación", 
+                        detail: "Revisión de la ISO 39002 como guía práctica. Integración con otros sistemas de gestión (ISO 9001, 45001). (Flash Card: La 39002 ¿es certificable? ¿Por qué?)" 
+                    },
+                    "Sábado": { 
+                        title: "Role-Play de Auditoría y Cumplimiento", 
+                        detail: "Simulación grupal de una reunión de auditoría para identificar no conformidades. Taller de mejora continua. (Flash Card: Define 'No Conformidad')." 
+                    },
+                    "Domingo": { 
+                        title: "Descanso y Síntesis", 
+                        detail: "Tiempo para consolidar el conocimiento normativo. El cumplimiento normativo como base para la IA en el M4." 
+                    },
+                }
+            },
+            {
+                week: 4,
+                module: "M4: Diseño de planes de movilidad segura y sostenible",
+                theme: "Formulación, Implementación e Integración de Soluciones",
+                activities: {
+                    "Lunes": { 
+                        title: "Formulación del Plan de Movilidad", 
+                        detail: "Taller: Establecimiento de alcance, objetivos e indicadores SMART para un Plan de Movilidad Segura y Sostenible (PMSS). (Flash Card: Acrónimo SMART)." 
+                    },
+                    "Martes": { 
+                        title: "Integración de Sostenibilidad y Tecnología", 
+                        detail: "Clase: Movilidad activa, electrificación, y el rol de IoT/IA en la infraestructura inteligente del PMSS. (Flash Card: ¿Qué es la 'última milla' en la movilidad?)" 
+                    },
+                    "Miércoles": { 
+                        title: "Elaboración de Estrategias y Tareas", 
+                        detail: "Desarrollo del componente de seguridad vial (lecciones de M1 y M3) y el componente tecnológico (lecciones de M2) dentro del plan. (Flash Card: ¿Cómo influye el urbanismo táctico en la SV?)" 
+                    },
+                    "Jueves": { 
+                        title: "Aplicación Práctica: Casos Reales", 
+                        detail: "Análisis de PMSS implementados en empresas, comunidades y gobiernos locales. Sesión de Preguntas y Respuestas con un experto invitado (simulado). (Flash Card: ¿Quiénes son los actores clave en un PMSS local?)" 
+                    },
+                    "Viernes": { 
+                        title: "Preparación de la Presentación Final", 
+                        detail: "Revisión de requisitos del proyecto final: Diseño de un PMSS. Asesoría grupal para pulir los planes. (Flash Card: Requisitos clave del proyecto final)." 
+                    },
+                    "Sábado": { 
+                        title: "Presentación y Peer Review", 
+                        detail: "Entrega y revisión cruzada (peer review) de los Planes de Movilidad Segura y Sostenible. Retroalimentación final. (Flash Card: Importancia del feedback en la gestión de proyectos)." 
+                    },
+                    "Domingo": { 
+                        title: "Cierre del Curso y Evaluación", 
+                        detail: "Examen final de conceptos clave (M1-M4). Encuesta de satisfacción del curso y despedida. ¡Felicidades, has terminado! 🎉" 
+                    },
+                }
+            }
+        ];
+
+        let currentWeek = 1;
+        const scheduleContent = document.getElementById('schedule-content');
+        const weekTabsContainer = document.getElementById('week-tabs');
+
+        // --- FUNCIONES DE RENDERING ---
+
+        /**
+         * Crea el HTML para una sola tarjeta flip-flop.
+         * @param {string} day - El día de la semana.
+         * @param {object} activity - Objeto con 'title' y 'detail'.
+         * @returns {string} El HTML de la tarjeta.
+         */
+        const createFlashCard = (day, activity) => {
+            return `
+                <!-- Tarjeta Flip-Flop para el día ${day} -->
+                <!-- FIX: Se añade min-h-[250px] para ampliar la tarjeta y prevenir solapamiento -->
+                <div class="flip-card card-border-gradient min-h-[250px]" onclick="this.classList.toggle('flipped')">
+                    <div class="flip-card-inner w-full h-full relative">
+                        
+                        <!-- Frente de la tarjeta -->
+                        <div class="flip-card-front card-content p-5 flex flex-col justify-between shadow-md h-full">
+                            <!-- Se reorganiza la estructura para separar mejor el título y el día -->
+                            <div>
+                                <span class="text-sm font-semibold text-gray-500 block mb-2">${day}</span>
+                                <h3 class="text-vibrant-purple text-xl font-extrabold mt-1 mb-4">${activity.title}</h3>
+                            </div>
+                            
+                            <div class="mt-auto"> 
+                                <p class="text-sm text-gray-600 font-medium mb-2">
+                                    Haz clic para ver los detalles de la actividad.
+                                </p>
+                                <span class="text-vibrant-green font-medium flex items-center justify-end">
+                                    Módulo ${currentWeek} <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+                                </span>
+                            </div>
+                        </div>
+                        
+                        <!-- Dorso (Back) de la tarjeta -->
+                        <!-- FIX: Cambiado el fondo a Esmeralda claro (bg-emerald-50) -->
+                        <div class="flip-card-back card-content p-5 flex flex-col justify-between shadow-md bg-emerald-50 h-full">
+                            <h4 class="text-vibrant-green text-xl font-bold">${activity.title}</h4>
+                            <p class="text-base text-gray-700 mt-2 italic flex-grow overflow-y-auto">
+                                ${activity.detail}
+                            </p>
+                            <p class="text-xs text-gray-500 mt-4 text-right">
+                                Clic para volver.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            `;
+        };
+
+
+        /**
+         * Renderiza el contenido del cronograma para la semana seleccionada.
+         * @param {number} weekIndex - El índice de la semana (1 a 4).
+         */
+        const renderSchedule = (weekIndex) => {
+            currentWeek = weekIndex;
+            const weekData = scheduleData.find(w => w.week === weekIndex);
+            
+            if (!weekData) return scheduleContent.innerHTML = '<p class="text-center text-red-500 mt-12">Datos de la semana no encontrados.</p>';
+
+            // Actualizar pestañas (resaltar la actual)
+            document.querySelectorAll('.week-tab').forEach(tab => {
+                const isCurrent = parseInt(tab.dataset.week) === weekIndex;
+                tab.classList.toggle('bg-white', isCurrent);
+                // FIX: Actualizado color de texto activo
+                tab.classList.toggle('text-vibrant-purple', isCurrent); 
+                // FIX: Actualizado color de fondo inactivo
+                tab.classList.toggle('bg-green-500', !isCurrent);
+                tab.classList.toggle('text-white', !isCurrent);
+                tab.classList.toggle('font-bold', isCurrent);
+            });
+            
+            // Generar el contenido de la semana
+            let html = `
+                <!-- FIX: Actualizado borde y texto a los nuevos colores -->
+                <div class="bg-white p-6 md:p-8 rounded-xl shadow-2xl border-t-4 border-vibrant-green mb-8">
+                    <h2 class="text-2xl md:text-3xl font-extrabold text-vibrant-purple mb-2">
+                        Semana ${weekData.week}: ${weekData.module}
+                    </h2>
+                    <p class="text-lg text-gray-600 mb-6 border-b pb-4">
+                        <span class="font-semibold text-vibrant-green">Tema Principal:</span> ${weekData.theme}
+                    </p>
+                </div>
+                <!-- Contenedor de las tarjetas con diseño responsivo de grid (se mantiene) -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-7 gap-6 auto-rows-fr">
+            `;
+
+            daysOfWeek.forEach(day => {
+                const activity = weekData.activities[day];
+                if (activity) {
+                    html += createFlashCard(day, activity);
+                }
+            });
+
+            html += `</div>`;
+            scheduleContent.innerHTML = html;
+        };
+
+        /**
+         * Inicializa la interfaz (Tabs y la primera semana).
+         */
+        const initInterface = () => {
+            // 1. Crear los botones de navegación
+            scheduleData.forEach(week => {
+                const button = document.createElement('button');
+                button.dataset.week = week.week;
+                button.className = 'week-tab px-4 py-2 rounded-lg text-sm font-medium transition duration-200 shadow-md transform hover:scale-105';
+                button.textContent = `Semana ${week.week}`;
+                button.onclick = () => renderSchedule(week.week);
+                weekTabsContainer.appendChild(button);
+            });
+
+            // 2. Renderizar la primera semana por defecto
+            renderSchedule(1);
+        };
+
+        // Iniciar la aplicación cuando el script se ejecute
+        initInterface();
+        
+    </script>
+</body>
+</html>
